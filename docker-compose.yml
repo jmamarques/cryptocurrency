@@ -1,0 +1,33 @@
+version: "2.1"
+
+networks:
+  test:
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "18080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - test
+
+  db:
+    image: mongo
+    container_name: db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: cod
+      MONGO_INITDB_ROOT_PASSWORD: cod_appli
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok'
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    networks:
+      - test

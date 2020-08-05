@@ -1,0 +1,11 @@
+version: "2.1"
+
+services:
+  db:
+    image: mongo
+    container_name: db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: cod
+      MONGO_INITDB_ROOT_PASSWORD: cod_appli
+    ports:
+      - "27017:27017"
