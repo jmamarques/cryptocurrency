@@ -8,9 +8,9 @@ spring:
   # mail configuration
   mail:
     default-encoding: UTF-8
-    host: smtp.gmail.com
-    username: yourgamil@gmail.com
-    password: youremailpassword
+    host: smtp-mail.outlook.com
+    username: joaomalado1@hotmail.com
+    password: ENC(kzFD9zQWt3+Zkc4lw1o5+g==)
     port: 587
     properties:
       mail:
@@ -22,4 +22,7 @@ spring:
     test-connection: false
 # custom property to control application consistency
 jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
   mandatory: true

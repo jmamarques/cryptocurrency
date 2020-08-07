@@ -7,9 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
+
+import javax.mail.internet.MimeMessage;
 
 /**
  * JMA - 8/5/2020 21:25
@@ -27,6 +31,9 @@ public class StartUp implements CommandLineRunner {
     private Environment env;
 
     @Autowired
+    private JavaMailSender mailSender;
+
+    @Autowired
     private ConfigurableApplicationContext ctx;
 
     @Override
@@ -39,6 +46,14 @@ public class StartUp implements CommandLineRunner {
         assert forObject != null;
         CryptoCurrency save = cryptoCurrencyRepository.save(forObject);
         log.info(save.toString());
+
+        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
+        message.setFrom("joaomalado1@hotmail.com");
+        message.setTo("jm.a.marques.93@gmail.com");
+        message.setSubject("This is the message subject");
+        message.setText("This is the message body");
+        this.mailSender.send(mimeMessage);
     }
 
     /**
