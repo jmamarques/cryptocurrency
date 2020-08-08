@@ -3,6 +3,7 @@ package cod.currency.model;
 import cod.currency.util.deserialize.CustomDateConverter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,6 +14,7 @@ import java.util.Date;
  **/
 @Document
 @Data
+@EqualsAndHashCode
 public class CryptoCurrency {
     @Id
     private String id;
@@ -26,4 +28,5 @@ public class CryptoCurrency {
     private double low;
     private double ask;
     private double open;
+    private Coin coin;
 }

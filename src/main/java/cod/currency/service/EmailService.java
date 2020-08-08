@@ -13,7 +13,7 @@ import java.util.Date;
 @Log4j2
 public class EmailService {
 
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 100000, initialDelay = 1000)
     public void testEmailSend() {
         log.info("I'm doing this, and I can't stop" + new Date());
 

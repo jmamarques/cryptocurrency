@@ -1,0 +1,28 @@
+# db configuration
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: cod
+  # mail configuration
+  mail:
+    default-encoding: UTF-8
+    host: smtp-mail.outlook.com
+    username: joaomalado1@hotmail.com
+    password: kzFD9zQWt3+Zkc4lw1o5+g==
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    test-connection: false
+# custom property to control application consistency
+jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+  mandatory: false
