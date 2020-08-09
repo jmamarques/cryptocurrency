@@ -1,5 +1,6 @@
 package cod.currency.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +13,6 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
-import org.thymeleaf.templateresolver.StringTemplateResolver;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -31,8 +31,14 @@ public class MailSenderConfiguration {
     private static final String USERNAME = "";
     private static final String PASSWORD = "";
     private static final String EMAIL_TEMPLATE_ENCODING = "UTF8";
-    private ApplicationContext applicationContext;
-    private Environment environment;
+    private final ApplicationContext applicationContext;
+    private final Environment environment;
+
+    @Autowired
+    public MailSenderConfiguration(ApplicationContext applicationContext, Environment environment) {
+        this.applicationContext = applicationContext;
+        this.environment = environment;
+    }
 
     // DUMMY to configure Java Mail Sender - I used properties instead of bean configuration
     // @Bean
@@ -40,9 +46,10 @@ public class MailSenderConfiguration {
 
         final JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
-        // Basic mail sender configuration, based on emailconfig.properties
+        // Basic mail sender configuration, based on emailConfig.properties
         mailSender.setHost(this.environment.getProperty(HOST));
-        mailSender.setPort(this.environment.getProperty(PORT) == null ? 587 : Integer.parseInt(this.environment.getProperty(PORT)));
+        String port = this.environment.getProperty(PORT);
+        mailSender.setPort(port == null ? 587 : Integer.parseInt(port));
         mailSender.setProtocol(this.environment.getProperty(PROTOCOL));
         mailSender.setUsername(this.environment.getProperty(USERNAME));
         mailSender.setPassword(this.environment.getProperty(PASSWORD));
@@ -53,7 +60,6 @@ public class MailSenderConfiguration {
         mailSender.setJavaMailProperties(javaMailProperties);
 
         return mailSender;
-
     }
 
     @Bean
@@ -70,8 +76,6 @@ public class MailSenderConfiguration {
         templateEngine.addTemplateResolver(textTemplateResolver());
         // Resolver for HTML emails (except the editable one)
         templateEngine.addTemplateResolver(htmlTemplateResolver());
-        // Resolver for HTML editable emails (which will be treated as a String)
-        templateEngine.addTemplateResolver(stringTemplateResolver());
         // Message source, internationalization specific to emails
         templateEngine.setTemplateEngineMessageSource(emailMessageSource());
         return templateEngine;
@@ -79,7 +83,7 @@ public class MailSenderConfiguration {
 
     private ITemplateResolver textTemplateResolver() {
         final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setOrder(Integer.valueOf(1));
+        templateResolver.setOrder(1);
         templateResolver.setResolvablePatterns(Collections.singleton("text/*"));
         templateResolver.setPrefix("/mail/");
         templateResolver.setSuffix(".txt");
@@ -91,21 +95,12 @@ public class MailSenderConfiguration {
 
     private ITemplateResolver htmlTemplateResolver() {
         final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setOrder(Integer.valueOf(2));
+        templateResolver.setOrder(2);
         templateResolver.setResolvablePatterns(Collections.singleton("html/*"));
         templateResolver.setPrefix("/mail/");
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setCharacterEncoding(EMAIL_TEMPLATE_ENCODING);
-        templateResolver.setCacheable(false);
-        return templateResolver;
-    }
-
-    private ITemplateResolver stringTemplateResolver() {
-        final StringTemplateResolver templateResolver = new StringTemplateResolver();
-        templateResolver.setOrder(Integer.valueOf(3));
-        // No resolvable pattern, will simply process as a String template everything not previously matched
-        templateResolver.setTemplateMode("HTML5");
         templateResolver.setCacheable(false);
         return templateResolver;
     }
