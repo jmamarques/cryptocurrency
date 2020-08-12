@@ -10,6 +10,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import static cod.currency.util.enums.CoinEnum.BTCEUR;
 
 /**
@@ -28,6 +31,15 @@ public class CurrencyService {
         this.cryptoCurrencyRepository = cryptoCurrencyRepository;
         this.coinRepository = coinRepository;
         this.restTemplate = restTemplate;
+    }
+
+    @Scheduled(fixedDelay = 60000, initialDelay = 1000)
+    public void t() {
+        Coin btceur = coinRepository.findByCurrency(BTCEUR.getValue());
+        GregorianCalendar gregorianCalendar = new GregorianCalendar(2020, Calendar.AUGUST, 11);
+        CryptoCurrency forObject = cryptoCurrencyRepository.avgByCoinAndDate(btceur, gregorianCalendar.getTime());
+
+
     }
 
     @Scheduled(fixedDelay = 60000, initialDelay = 1000)
