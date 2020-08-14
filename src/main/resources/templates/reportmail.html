@@ -1,55 +1,146 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
     <script src="/webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script src="/webjars/font-awesome/5.5.0/js/all.js"></script>
+    <script src="/webjars/chartjs/2.9.3/Chart.min.js"></script>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
     <title>Report Crypto Currency</title>
     <link href="/webjars/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/webjars/chartjs/2.9.3/Chart.min.css" rel="stylesheet"/>
     <style>
+        .decorated {
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .decorated > span {
+            position: relative;
+            display: inline-block;
+        }
+
+        .decorated > span:before, .decorated > span:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            border-bottom: 1px solid;
+            color: #e0e0e0;
+            width: 15vw;
+            margin: 0 20px;
+        }
+
+        .decorated > span:before {
+            right: 100%;
+        }
+
+        .decorated > span:after {
+            left: 100%;
+        }
     </style>
 </head>
 <body>
 <div class="w-100 bg-dark shadow-sm p-3 mb-5 rounded-bottom">
-    <div class="text-white text-center user-select-all">Report Crypto Currency</div>
+    <h1 class="text-white text-center user-select-all">Report Crypto Currency</h1>
 </div>
 <div class="container">
-
+    <h2 class="decorated mt-4 mb-4">
+        <span style="color: #616161;font-weight: 300;">Bitcoin</span>
+    </h2>
     <div class="row mx-md-n5">
         <div class="col-12 col-lg-4 px-md-5 mb-2">
             <div class="card shadow-sm p-3">
-                <div class="card-header bg-white">
-                    Quote
+                <div class="card-header bg-white" style="color: #616161;font-weight: 300;">
+                    Daily Values
                 </div>
                 <div class="card-body">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-                    <i class="fas fa-arrow-up"></i>
-                    <i class="fas fa-arrow-down"></i>
-                    <i class="fas fa-equals"></i>
+                    <dl class="row">
+                        <dt class="col-3">Bid:</dt>
+                        <dd class="col-9">
+                            <span th:text="${T(Math).round(avg.bid * 1000) / 1000.0}"></span>
+                            <i th:class="${avg.bid >= avg.open} ? 'fas fa-arrow-up' : 'fas fa-arrow-down'"
+                               th:style="${avg.bid >= avg.open} ? 'color: green' : 'color: red'"></i>
+                        </dd>
+                        <dt class="col-3">Rate:</dt>
+                        <dd class="col-9">
+                            <span th:style="${avg.bid >= avg.open} ? 'color: green' : 'color: red'"
+                                  th:text="${T(Math).round(avg.bid * 100000.0 / avg.open) / 1000.0} + '%'"></span>
+                        </dd>
+                    </dl>
                 </div>
             </div>
         </div>
     </div>
 
+    <h2 class="decorated mt-4 mb-4">
+        <span style="color: #616161;font-weight: 300;">Recent Values</span>
+    </h2>
 
     <table class="table table-hover table-dark">
         <thead>
         <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
+            <th scope="col">Bid</th>
+            <th scope="col">High</th>
             <th scope="col">Last</th>
-            <th scope="col">Handle</th>
+            <th scope="col">Low</th>
+            <th scope="col">Open</th>
+            <th scope="col">Volume</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
+        <tr th:each="element : ${table}">
+            <td th:text="${element.bid}"/>
+            <td th:text="${element.high}"/>
+            <td th:text="${element.last}"/>
+            <td th:text="${element.low}"/>
+            <td th:text="${element.open}"/>
+            <td th:text="${element.volume}"/>
         </tr>
         </tbody>
     </table>
+    <h2 class="decorated mt-4 mb-4">
+        <span style="color: #616161;font-weight: 300;">Charts</span>
+    </h2>
+    <canvas height="400" id="myChart" width="400"></canvas>
+    <script>
+        var ctx = document.getElementById('myChart');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
 </div>
 </body>
 </html>
