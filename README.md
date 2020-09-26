@@ -7,6 +7,7 @@ We will use Thymeleaf to create templates to send via email.
 in progress...
 
 ## Usage
+in progress...
 
 ## Contributing
 
