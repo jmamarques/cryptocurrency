@@ -1,5 +1,7 @@
 package cod.currency.bootstrap;
 
+import cod.currency.model.Coin;
+import cod.currency.repository.CoinRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -28,7 +30,7 @@ public class StartUp implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         validateJasypt();
-
+        populateDb();
 //        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
 //        final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
 //        message.setFrom("joaomalado1@hotmail.com");
@@ -36,6 +38,18 @@ public class StartUp implements CommandLineRunner {
 //        message.setSubject("This is the message subject");
 //        message.setText("This is the message body");
 //        this.mailSender.send(mimeMessage);
+    }
+
+    private void populateDb() {
+        CoinRepository coinRepository = ctx.getBean("coinRepository", CoinRepository.class);
+        Coin btcEur = coinRepository.findByCurrency("btceur");
+        if (btcEur == null) {
+            btcEur = new Coin();
+            btcEur.setCurrency("btceur");
+            btcEur.setActive(true);
+            btcEur.setName("Bitcoin (EUR)");
+            coinRepository.save(btcEur);
+        }
     }
 
     /**
