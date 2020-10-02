@@ -2,9 +2,10 @@ package cod.currency.service;
 
 import cod.currency.model.Coin;
 import cod.currency.model.CryptoCurrency;
+import cod.currency.model.CryptoCurrencyReport;
 import cod.currency.repository.CoinRepository;
+import cod.currency.repository.CryptoCurrencyReportRepository;
 import cod.currency.repository.CryptoCurrencyRepository;
-import cod.currency.repository.CryptoCurrencyUniqueRepository;
 import cod.currency.util.DateUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +34,16 @@ public class CurrencyService {
     private static final int MINUTE_IN_MILLISECOND = SECOND_IN_MILLISECOND * 60;
     private static final int HOUR_IN_MILLISECOND = MINUTE_IN_MILLISECOND * 60;
     private static final int DAY_IN_MILLISECOND = HOUR_IN_MILLISECOND * 24;
-    private final CryptoCurrencyUniqueRepository cryptoCurrencyUniqueRepository;
+    private final CryptoCurrencyReportRepository cryptoCurrencyReportRepository;
 
 
     @Autowired
     public CurrencyService(CryptoCurrencyRepository cryptoCurrencyRepository,
-                           CryptoCurrencyUniqueRepository cryptoCurrencyUniqueRepository,
+                           CryptoCurrencyReportRepository cryptoCurrencyReportRepository,
                            CoinRepository coinRepository,
                            RestTemplate restTemplate) {
         this.cryptoCurrencyRepository = cryptoCurrencyRepository;
-        this.cryptoCurrencyUniqueRepository = cryptoCurrencyUniqueRepository;
+        this.cryptoCurrencyReportRepository = cryptoCurrencyReportRepository;
         this.coinRepository = coinRepository;
         this.restTemplate = restTemplate;
     }
@@ -57,14 +58,14 @@ public class CurrencyService {
             // SYSDATE
             LocalDate now = LocalDate.now();
             // last element inserted
-            Optional<CryptoCurrency> lastElement = cryptoCurrencyUniqueRepository.findAllByCoin(coin, PageRequest.of(1, 1)).stream().findFirst();
+            Optional<CryptoCurrencyReport> lastElement = cryptoCurrencyReportRepository.findAllByCoin(coin, PageRequest.of(1, 1)).stream().findFirst();
             // the value does not exist or the date is different from today
             if (!lastElement.isPresent() || DateUtil.convertToLocalDateViaInstant(lastElement.get().getTimestamp()).compareTo(now) != 0) {
                 // add new element to unique record
-                CryptoCurrency element = restTemplate.getForObject("https://www.bitstamp.net/api/v2/ticker/{exchange}/", CryptoCurrency.class, coin.getCurrency());
+                CryptoCurrencyReport element = restTemplate.getForObject("https://www.bitstamp.net/api/v2/ticker/{exchange}/", CryptoCurrencyReport.class, coin.getCurrency());
                 if (element != null) {
                     element.setCoin(coin);
-                    cryptoCurrencyUniqueRepository.save(element);
+                    cryptoCurrencyReportRepository.save(element);
                 } else {
                     // log error
                     log.error("We could not get properly the values from api for {} with id equals to {}", coin.getName(), coin.getName());

@@ -1,7 +1,7 @@
 package cod.currency.repository;
 
 import cod.currency.model.Coin;
-import cod.currency.model.CryptoCurrency;
+import cod.currency.model.CryptoCurrencyReport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.Aggregation;
@@ -16,10 +16,10 @@ import java.util.Date;
  * JMA - 8/5/2020 21:46
  **/
 @Repository
-public interface CryptoCurrencyUniqueRepository extends MongoRepository<CryptoCurrency, String> {
+public interface CryptoCurrencyReportRepository extends MongoRepository<CryptoCurrencyReport, String> {
 
     @Query(value = "{'coin': ?0}", sort = "{ timestamp : -1 }")
-    Page<CryptoCurrency> findAllByCoin(Coin coin, Pageable page);
+    Page<CryptoCurrencyReport> findAllByCoin(Coin coin, Pageable page);
 
 
     @Aggregation(pipeline = {"{ $match:  {'timestamp': { '$gt': ?1 }}}",
@@ -37,7 +37,7 @@ public interface CryptoCurrencyUniqueRepository extends MongoRepository<CryptoCu
                     "            , 'coin' : {$avg: '$coin'}\n" +
                     "        }}" +
                     "    }"})
-    CryptoCurrency avgByCoinAndDate(Coin coin, LocalDate date);
+    CryptoCurrencyReport avgByCoinAndDate(Coin coin, LocalDate date);
 
     @Aggregation(pipeline = {"{ $match:  {'timestamp': { '$gte': ?1 }}}",
             "{ $match: {'timestamp': { '$lte': ?2 }}}",
@@ -55,5 +55,5 @@ public interface CryptoCurrencyUniqueRepository extends MongoRepository<CryptoCu
                     "            , 'coin' : {$avg: '$coin'}\n" +
                     "        }}" +
                     "    }"})
-    CryptoCurrency avgByCoinAndDate(Coin coin, Date date1, Date date2);
+    CryptoCurrencyReport avgByCoinAndDate(Coin coin, Date date1, Date date2);
 }
