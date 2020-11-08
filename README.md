@@ -13,7 +13,7 @@ Configuration:
 Steps:
 1. Create and start database container `docker-compose -f docker-compose_only_db.yml up -d`, instead it we can use a local database with 
 default configurations to mongo db
-2. <docker compose of project in progress>
+2. docker compose of project in progress
 
 ## Usage
 in progress...

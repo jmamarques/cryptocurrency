@@ -2,9 +2,7 @@ package cod.currency.service;
 
 import cod.currency.model.Coin;
 import cod.currency.model.CryptoCurrency;
-import cod.currency.model.CryptoCurrencyReport;
 import cod.currency.repository.CoinRepository;
-import cod.currency.repository.CryptoCurrencyReportRepository;
 import cod.currency.repository.CryptoCurrencyRepository;
 import cod.currency.util.DateUtil;
 import lombok.extern.log4j.Log4j2;
@@ -34,38 +32,35 @@ public class CurrencyService {
     private static final int MINUTE_IN_MILLISECOND = SECOND_IN_MILLISECOND * 60;
     private static final int HOUR_IN_MILLISECOND = MINUTE_IN_MILLISECOND * 60;
     private static final int DAY_IN_MILLISECOND = HOUR_IN_MILLISECOND * 24;
-    private final CryptoCurrencyReportRepository cryptoCurrencyReportRepository;
 
 
     @Autowired
     public CurrencyService(CryptoCurrencyRepository cryptoCurrencyRepository,
-                           CryptoCurrencyReportRepository cryptoCurrencyReportRepository,
                            CoinRepository coinRepository,
                            RestTemplate restTemplate) {
         this.cryptoCurrencyRepository = cryptoCurrencyRepository;
-        this.cryptoCurrencyReportRepository = cryptoCurrencyReportRepository;
         this.coinRepository = coinRepository;
         this.restTemplate = restTemplate;
     }
 
     /**
-     * Populate unique value to weekly and monthly report. This schedule run every hour to assure at least one record is saved.
+     * This schedule run every hour to assure at least one record is saved.
      **/
     @Scheduled(fixedDelay = HOUR_IN_MILLISECOND)
-    public void saveUniqueValue() {
+    public void saveFirstValueOfDay() {
         // get all active coins
         coinRepository.findByActive(true).forEach(coin -> {
             // SYSDATE
             LocalDate now = LocalDate.now();
             // last element inserted
-            Optional<CryptoCurrencyReport> lastElement = cryptoCurrencyReportRepository.findAllByCoin(coin, PageRequest.of(1, 1)).stream().findFirst();
+            Optional<CryptoCurrency> lastElement = cryptoCurrencyRepository.findAllByCoin(coin, PageRequest.of(1, 1)).stream().findFirst();
             // the value does not exist or the date is different from today
             if (!lastElement.isPresent() || DateUtil.convertToLocalDateViaInstant(lastElement.get().getTimestamp()).compareTo(now) != 0) {
                 // add new element to unique record
-                CryptoCurrencyReport element = restTemplate.getForObject("https://www.bitstamp.net/api/v2/ticker/{exchange}/", CryptoCurrencyReport.class, coin.getCurrency());
+                CryptoCurrency element = getCurrency(coin);
                 if (element != null) {
                     element.setCoin(coin);
-                    cryptoCurrencyReportRepository.save(element);
+                    cryptoCurrencyRepository.save(element);
                 } else {
                     // log error
                     log.error("We could not get properly the values from api for {} with id equals to {}", coin.getName(), coin.getName());
@@ -76,18 +71,30 @@ public class CurrencyService {
 
     }
 
-    @Scheduled(fixedDelay = 60000)
-    public void t() {
-        Coin btceur = coinRepository.findByCurrency(BTCEUR.getValue());
-        LocalDate localDate = LocalDate.now();
-        hourReport(localDate, btceur);
+    /**
+     * Auxiliary method to get currency to the current API
+     *
+     * @param coin - Current coin
+     * @return Currency for that coin
+     */
+    private CryptoCurrency getCurrency(Coin coin) {
+        return restTemplate.getForObject("https://www.bitstamp.net/api/v2/ticker/{exchange}/", CryptoCurrency.class, coin.getCurrency());
+    }
+
+
+    /**
+     * Periodic schedule - Evaluation coins based in criteria previously defined in Parameter Table
+     */
+    @Scheduled(fixedDelay = MINUTE_IN_MILLISECOND)
+    public void periodicCoinAnalysis() {
+        // add logic to my analysis
     }
 
     @Scheduled(fixedDelay = 60000)
     public void test() {
         Coin btceur = coinRepository.findByCurrency(BTCEUR.getValue());
 
-        CryptoCurrency forObject = restTemplate.getForObject("https://www.bitstamp.net/api/v2/ticker/{exchange}/", CryptoCurrency.class, btceur.getCurrency());
+        CryptoCurrency forObject = getCurrency(btceur);
 
         forObject.setCoin(btceur);
         CryptoCurrency save = cryptoCurrencyRepository.save(forObject);
@@ -108,4 +115,13 @@ public class CurrencyService {
         Coin btceur = coinRepository.findByCurrency(BTCEUR.getValue());
         return hourReport(LocalDate.now(), btceur);
     }
+
+    // to delete
+    @Scheduled(fixedDelay = 60000)
+    public void t() {
+        Coin btceur = coinRepository.findByCurrency(BTCEUR.getValue());
+        LocalDate localDate = LocalDate.now();
+        hourReport(localDate, btceur);
+    }
+
 }
