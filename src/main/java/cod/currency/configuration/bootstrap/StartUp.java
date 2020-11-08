@@ -1,4 +1,4 @@
-package cod.currency.bootstrap;
+package cod.currency.configuration.bootstrap;
 
 import cod.currency.model.Coin;
 import cod.currency.repository.CoinRepository;

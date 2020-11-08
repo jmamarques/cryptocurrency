@@ -21,6 +21,8 @@ public interface CryptoCurrencyRepository extends MongoRepository<CryptoCurrency
     @Query(value = "{'coin': ?0}", sort = "{ timestamp : -1 }")
     Page<CryptoCurrency> findAllByCoin(Coin coin, Pageable page);
 
+    @Query(value = "{'timestamp': { '$gte': ?0 }}", sort = "{ timestamp : -1 }")
+    Page<CryptoCurrency> findAllByDate(Date date, Pageable page);
 
     @Aggregation(pipeline = {"{ $match:  {'timestamp': { '$gt': ?1 }}}",
             "{ $match: {'coin': ?0}}",

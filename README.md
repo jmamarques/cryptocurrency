@@ -18,6 +18,10 @@ default configurations to mongo db
 ## Usage
 in progress...
 
+## Documentation
+Helpful documents to understand some implementations done in this project.
+* [Cache](documents/CACHE.md)
+
 ## Contributing
 
 ## License

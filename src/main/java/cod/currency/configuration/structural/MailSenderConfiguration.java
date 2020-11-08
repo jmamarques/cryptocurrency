@@ -1,4 +1,4 @@
-package cod.currency.configuration;
+package cod.currency.configuration.structural;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

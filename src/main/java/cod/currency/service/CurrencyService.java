@@ -16,8 +16,6 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Optional;
 
-import static cod.currency.util.enums.CoinEnum.BTCEUR;
-
 /**
  * JMA - 8/7/2020 21:57
  **/
@@ -84,44 +82,23 @@ public class CurrencyService {
 
     /**
      * Periodic schedule - Evaluation coins based in criteria previously defined in Parameter Table
+     * Trigger email when we have special conditions
      */
     @Scheduled(fixedDelay = MINUTE_IN_MILLISECOND)
     public void periodicCoinAnalysis() {
         // add logic to my analysis
     }
 
-    @Scheduled(fixedDelay = 60000)
-    public void test() {
-        Coin btceur = coinRepository.findByCurrency(BTCEUR.getValue());
-
-        CryptoCurrency forObject = getCurrency(btceur);
-
-        forObject.setCoin(btceur);
-        CryptoCurrency save = cryptoCurrencyRepository.save(forObject);
-
-        log.info(save.toString());
-    }
-
-    public HashMap<String, Object> hourReport(LocalDate date, Coin coin) {
+    public HashMap<String, Object> hourReport(LocalDate date) {
         HashMap<String, Object> res = new HashMap<>();
-        res.put("avg", cryptoCurrencyRepository.avgByCoinAndDate(coin, date));
-        // 1 day
-//        res.put("daily", cryptoCurrencyRepository.findAllByCoin(coin, PageRequest.of(0,1)).stream().findFirst().orElseThrow());
-        res.put("table", cryptoCurrencyRepository.findAllByCoin(coin, PageRequest.of(0, 10)));
+//        res.put("avg", cryptoCurrencyRepository.avgByCoinAndDate(coin, date));
+//        res.put("table", cryptoCurrencyRepository.findAllByCoin(coin, PageRequest.of(0, 10)));
         return res;
     }
 
-    public HashMap<String, Object> reportCoin() {
-        Coin btceur = coinRepository.findByCurrency(BTCEUR.getValue());
-        return hourReport(LocalDate.now(), btceur);
-    }
-
     // to delete
-    @Scheduled(fixedDelay = 60000)
-    public void t() {
-        Coin btceur = coinRepository.findByCurrency(BTCEUR.getValue());
-        LocalDate localDate = LocalDate.now();
-        hourReport(localDate, btceur);
+    public HashMap<String, Object> reportCoin() {
+        return hourReport(LocalDate.now());
     }
 
 }

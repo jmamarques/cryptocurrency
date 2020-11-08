@@ -1,4 +1,4 @@
-package cod.currency.configuration;
+package cod.currency.configuration.aspect;
 
 import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.ProceedingJoinPoint;

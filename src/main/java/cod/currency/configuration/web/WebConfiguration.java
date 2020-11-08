@@ -1,4 +1,4 @@
-package cod.currency.configuration;
+package cod.currency.configuration.web;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
