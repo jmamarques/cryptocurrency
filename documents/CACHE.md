@@ -41,29 +41,52 @@ public Book findBook(ISBN isbn) {...}
 ```java
 // the condition parameter - it only save in the cache if it return true otherwise it does not save
 // the unless parameter can be used to veto the adding of a value to the cache
-
+@Cacheable(cacheNames="book", condition="#name.length < 32", unless="#result.hardback")
+public Book findBook(String name)
 ```
+
+---
+
+*@CacheEvict* is used to remove one or more values in the cache
+
 ```java
+// remove all entries
+@CacheEvict(cacheNames="books", allEntries=true)
+public void loadBooks(InputStream batch)
 ```
+
+---
+
+*@CachePut* is used to populate the value, this run the method all the time
+
 ```java
+@CachePut(cacheNames="book", key="#isbn")
+public Book updateBook(ISBN isbn, BookDescriptor descriptor)
 ```
 
 ---
 
-*@CacheEvict*
+*@Caching* is used to compose multiple annotations 
+
+```java
+@Caching(evict = { @CacheEvict("primary"), @CacheEvict(cacheNames="secondary", key="#p0") })
+public Book importBooks(String deposit, Date date)
+```
 
 ---
 
-*@CachePut*
+*@CacheConfig* is used to avoid repetitive code such as cacheNames 4example
+
+```java
+@CacheConfig("books")
+public class BookRepositoryImpl implements BookRepository {
+
+    @Cacheable
+    public Book findBook(ISBN isbn) { return null; }
+}
+```
 
 ---
-
-*@Caching*
-
----
-
-*@CacheConfig*
-
 
 
 ## References
