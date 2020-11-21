@@ -18,4 +18,5 @@ public interface CoinRepository extends MongoRepository<Coin, String> {
 
     @Query("{'active': ?0}")
     List<Coin> findByActive(boolean active);
+
 }

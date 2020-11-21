@@ -4,13 +4,13 @@ spring:
     mongodb:
       host: localhost
       port: 27017
-      database: cod
+      database: embeded_db
   # mail configuration
   mail:
     default-encoding: UTF-8
     host: smtp-mail.outlook.com
     username: joaomalado1@hotmail.com
-    password: kzFD9zQWt3+Zkc4lw1o5+g==
+    password: ENC(kzFD9zQWt3+Zkc4lw1o5+g==)
     port: 587
     properties:
       mail:
@@ -25,4 +25,8 @@ jasypt:
   encryptor:
     algorithm: PBEWithMD5AndDES
     iv-generator-classname: org.jasypt.iv.NoIvGenerator
-  mandatory: false
+  mandatory: true
+
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG

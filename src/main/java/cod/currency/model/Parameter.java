@@ -14,5 +14,5 @@ public class Parameter {
     private String id;
     private String key;
     private String value;
-    private boolean isActive;
+    private boolean active;
 }

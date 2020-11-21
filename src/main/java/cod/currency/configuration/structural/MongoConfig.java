@@ -4,8 +4,18 @@ package cod.currency.configuration.structural;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class MongoConfig {
-//        extends AbstractMongoConfiguration {
+public class MongoConfig /*extends AbstractMongoClientConfiguration*/ {
+
+//    private final String dataBaseName;
+//
+//    public MongoConfig(@Value("${spring.data.mongodb.database}") String dataBaseName) {
+//        this.dataBaseName = dataBaseName;
+//    }
+//
+//    @Override
+//    protected String getDatabaseName() {
+//        return dataBaseName;
+//    }
 //    @Override
 //    public MongoClient mongoClient() {
 //        return new MongoClient("localhost");
@@ -17,7 +27,7 @@ public class MongoConfig {
 //    }
 //
 //    @Bean
-//    MongoTransactionManager transactionManager(MongoDbFactory dbFactory) {
+//    MongoTransactionManager transactionManager(MongoDatabaseFactory dbFactory) {
 //        return new MongoTransactionManager(dbFactory);
 //    }
 //
