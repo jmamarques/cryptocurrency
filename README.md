@@ -18,6 +18,9 @@ default configurations to mongo db
 ## Usage
 in progress...
 
+## Track problems
+[Failed to Configure a DataSource](https://www.baeldung.com/spring-boot-failed-to-configure-data-source)
+
 ## Documentation
 Helpful documents to understand some implementations done in this project.
 * [Cache](documents/CACHE.md)
