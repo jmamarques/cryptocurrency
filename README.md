@@ -24,6 +24,7 @@ in progress...
 ## Documentation
 Helpful documents to understand some implementations done in this project.
 * [Cache](documents/CACHE.md)
+* [Wave Front](https://docs.wavefront.com/wavefront_springboot.html)
 
 ## Contributing
 
