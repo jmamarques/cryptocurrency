@@ -10,7 +10,7 @@ spring:
     default-encoding: UTF-8
     host: smtp-mail.outlook.com
     username: joaomalado1@hotmail.com
-    password: ENC(kzFD9zQWt3+Zkc4lw1o5+g==)
+    password: kzFD9zQWt3+Zkc4lw1o5+g==
     port: 587
     properties:
       mail:
@@ -25,7 +25,8 @@ jasypt:
   encryptor:
     algorithm: PBEWithMD5AndDES
     iv-generator-classname: org.jasypt.iv.NoIvGenerator
-  mandatory: true
+    password: test_password
+  mandatory: false
 
 logging:
   level:
