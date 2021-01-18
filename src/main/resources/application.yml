@@ -26,7 +26,29 @@ jasypt:
     algorithm: PBEWithMD5AndDES
     iv-generator-classname: org.jasypt.iv.NoIvGenerator
   mandatory: true
-
+# Mongo Logger
 logging:
   level:
     org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+# Actuator
+management:
+  endpoints:
+    jmx:
+      exposure:
+        exclude: "*"
+    web:
+      base-path: /admin
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      group:
+        web:
+          include: ping
+        system:
+          include: diskSpace,db
+          show-details: always
+wavefront:
+  application:
+    name: Currency Application
+    service: CriptoCurrency
