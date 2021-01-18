@@ -21,9 +21,20 @@ public class MetricsAspect {
 
     public MetricsAspect(MeterRegistry meterRegistry) {
 
-        this.counter = meterRegistry.counter("controllerCounter", "type", "fromAspect");
-        this.counterFail = meterRegistry.counter("controllerCounterFail", "type", "fromAspect");
-        this.timer = meterRegistry.timer("controllerTimer", "type", "fromAspect");
+        this.counter = Counter.builder("controllerCounter")
+                .tag("type", "fromAspect")
+                .description("The number of requests ever done in all controllers")
+                .baseUnit("numeric")
+                .register(meterRegistry);
+        this.counterFail = Counter.builder("controllerCounterFail")
+                .tag("type", "fromAspect")
+                .description("The number of requests already made that failed to run for all controllers")
+                .baseUnit("numeric")
+                .register(meterRegistry);
+        this.timer = Timer.builder("controllerTimer")
+                .tag("type", "fromAspect")
+                .description("Execution time for controllers")
+                .register(meterRegistry);
     }
 
     @Around("execution(* cod.currency.controller..*(..)))")

@@ -30,6 +30,7 @@ jasypt:
 logging:
   level:
     org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+    com.wavefront: ERROR
 # Actuator
 management:
   endpoints:
@@ -46,7 +47,7 @@ management:
         web:
           include: ping
         system:
-          include: diskSpace,db
+          include: diskSpace,mongo, ping, datasource, mail
           show-details: always
 wavefront:
   application:
