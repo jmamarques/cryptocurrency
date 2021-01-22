@@ -27,6 +27,9 @@ Helpful documents to understand some implementations done in this project.
 * [Wave Front](https://docs.wavefront.com/wavefront_springboot.html)
 * [Metrics](https://blog.autsoft.hu/defining-custom-metrics-in-a-spring-boot-application-using-micrometer)
 * [Actuator](ACTUATOR.md)
+* Swagger
+  * [Swagger 2 Documentation](https://www.baeldung.com/swagger-2-documentation-for-spring-rest-api) - I used this one
+  * [Swagger OpenApi 3.0](https://www.baeldung.com/spring-rest-openapi-documentation)
 
 ## Contributing
 
