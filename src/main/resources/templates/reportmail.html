@@ -54,28 +54,8 @@
         <span style="color: #616161;font-weight: 300;">Recent Values</span>
     </h2>
 
-    <table class="table table-hover table-dark">
-        <thead>
-        <tr>
-            <th scope="col">Bid</th>
-            <th scope="col">High</th>
-            <th scope="col">Last</th>
-            <th scope="col">Low</th>
-            <th scope="col">Open</th>
-            <th scope="col">Volume</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="element : ${table}">
-            <td th:text="${element.bid}"/>
-            <td th:text="${element.high}"/>
-            <td th:text="${element.last}"/>
-            <td th:text="${element.low}"/>
-            <td th:text="${element.open}"/>
-            <td th:text="${element.volume}"/>
-        </tr>
-        </tbody>
-    </table>
+    <div th:insert="~{reportTable :: table}"></div>
+
     <h2 class="decorated mt-4 mb-4">
         <span style="color: #616161;font-weight: 300;">Charts</span>
     </h2>

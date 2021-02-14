@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="/webjars/font-awesome/5.5.0/js/all.js"></script>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <title>Report Crypto Currency</title>
+    <link href="/webjars/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body>
+<div th:fragment="table">
+    <!-- nav -->
+    <ul class="nav nav-tabs navbar-dark">
+        <li class="nav-item" th:each="currency : ${cryptoCurrencies}">
+            <a class="nav-link" data-toggle="tab" th:href="@{'#' + ${currency.coin.currency}}"
+               th:text="${currency.coin.name}"></a>
+        </li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div class="tab-pane container active" th:each="currency : ${cryptoCurrencies}"
+             th:id="${currency.coin.currency}">
+            <table class="table table-hover table-dark">
+                <thead>
+                <tr>
+                    <th scope="col">Bid</th>
+                    <th scope="col">High</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Low</th>
+                    <th scope="col">Open</th>
+                    <th scope="col">Volume</th>
+                    <th scope="col">Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="element : ${cryptoCurrenciesTable.get(currency.coin)}">
+                    <td th:text="${element.bid}"/>
+                    <td th:text="${element.high}"/>
+                    <td th:text="${element.last}"/>
+                    <td th:text="${element.low}"/>
+                    <td th:text="${element.open}"/>
+                    <td th:text="${element.volume}"/>
+                    <td th:text="${#dates.format(element.timestamp, 'dd-MMM-yyyy')}"/>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

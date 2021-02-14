@@ -9,6 +9,7 @@ import cod.currency.util.utilities.BaseMapSet;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -141,7 +142,7 @@ public class CurrencyService {
         BaseMapSet<Coin, CryptoCurrency> map = new BaseMapSet<>();
         coinRepository.findByActive(true)
                 .forEach(coin ->
-                        map.put(coin, cryptoCurrencyRepository.findAllByCoin(coin, PageRequest.of(1, size))
+                        map.put(coin, cryptoCurrencyRepository.findAllByCoin(coin, PageRequest.of(1, size, Sort.by(Sort.Direction.DESC, "timestamp")))
                                 .stream()
                                 .collect(Collectors.toList())));
         return map;
