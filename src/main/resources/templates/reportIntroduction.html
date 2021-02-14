@@ -12,21 +12,31 @@
 </head>
 <body>
 <div class="row mx-md-n5" th:fragment="introduction">
-    <div class="col-12 col-lg-4 px-md-5 mb-2">
-        <div class="card shadow-sm p-3" th:each="coin : ${cryptoCurrencies}">
-            <div class="card-header bg-white" style="color: #616161;font-weight: 300;" th:text="${coin.coin.name}">
+    <div class="col-12 col-lg-6 px-md-5 mb-2">
+        <div class="card shadow-sm p-3" th:each="currency : ${cryptoCurrencies}">
+            <div class="card-header bg-white" style="color: #616161;font-weight: 300;" th:text="${currency.coin.name}">
                 Coin Name
             </div>
             <div class="card-body">
                 <dl class="row">
-                    <dt class="col-4">Bid:</dt>
-                    <dd class="col-8">
-                        error
-                    </dd>
-                    <dt class="col-4">Rate:</dt>
-                    <dd class="col-8">
-                        error2
-                    </dd>
+                    <dt class="col-sm-3 col-6">Bid:</dt>
+                    <dd class="col-sm-3 col-6" th:text="${currency.bid}">No Value</dd>
+                    <dt class="col-sm-3 col-6">High:</dt>
+                    <dd class="col-sm-3 col-6" th:text="${currency.high}">No Value</dd>
+                    <dt class="col-sm-3 col-6">Last:</dt>
+                    <dd class="col-sm-3 col-6" th:text="${currency.last}">No Value</dd>
+                    <dt class="col-sm-3 col-6">Volume:</dt>
+                    <dd class="col-sm-3 col-6" th:text="${currency.volume}">No Value</dd>
+                    <dt class="col-sm-3 col-6">Low:</dt>
+                    <dd class="col-sm-3 col-6" th:text="${currency.low}">No Value</dd>
+                    <dt class="col-sm-3 col-6">Ask:</dt>
+                    <dd class="col-sm-3 col-6" th:text="${currency.ask}">No Value</dd>
+                    <dt class="col-sm-3 col-6">Open:</dt>
+                    <dd class="col-sm-3 col-6" th:text="${currency.open}">No Value</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-6">Volume weighted average price (VWAP):</dt>
+                    <dd class="col-6" th:text="${currency.vwap}">No Value</dd>
                 </dl>
             </div>
         </div>
