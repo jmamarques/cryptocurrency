@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="/webjars/font-awesome/5.5.0/js/all.js"></script>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <title>Report Crypto Currency</title>
+    <link href="/webjars/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+    </style>
+</head>
+<body>
+<div class="row mx-md-n5" th:fragment="introduction">
+    <div class="col-12 col-lg-4 px-md-5 mb-2">
+        <div class="card shadow-sm p-3" th:each="coin : ${cryptoCurrencies}">
+            <div class="card-header bg-white" style="color: #616161;font-weight: 300;" th:text="${coin.coin.name}">
+                Coin Name
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-4">Bid:</dt>
+                    <dd class="col-8">
+                        error
+                    </dd>
+                    <dt class="col-4">Rate:</dt>
+                    <dd class="col-8">
+                        error2
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

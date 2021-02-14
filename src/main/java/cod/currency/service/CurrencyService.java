@@ -5,6 +5,7 @@ import cod.currency.model.CryptoCurrency;
 import cod.currency.repository.CoinRepository;
 import cod.currency.repository.CryptoCurrencyRepository;
 import cod.currency.util.DateUtil;
+import cod.currency.util.utilities.BaseMapSet;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -14,7 +15,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * JMA - 8/7/2020 21:57
@@ -79,7 +82,6 @@ public class CurrencyService {
         return restTemplate.getForObject("https://www.bitstamp.net/api/v2/ticker/{exchange}/", CryptoCurrency.class, coin.getCurrency());
     }
 
-
     /**
      * Periodic schedule - Evaluation coins based in criteria previously defined in Parameter Table
      * Trigger email when we have special conditions
@@ -91,8 +93,10 @@ public class CurrencyService {
 
     public HashMap<String, Object> hourReport(LocalDate date) {
         HashMap<String, Object> res = new HashMap<>();
-//        res.put("avg", cryptoCurrencyRepository.avgByCoinAndDate(coin, date));
-//        res.put("table", cryptoCurrencyRepository.findAllByCoin(coin, PageRequest.of(0, 10)));
+        res.put("cryptoCurrencies", this.getLastCryptoCurrenciesByEndpoint());
+        res.put("currentDate", date);
+        res.put("cryptoCurrenciesTable", this.getAllCryptoCurrencies(10));
+        res.put("cryptoCurrenciesChart", this.getAllCryptoCurrencies(24));
         return res;
     }
 
@@ -101,4 +105,45 @@ public class CurrencyService {
         return hourReport(LocalDate.now());
     }
 
+    /**
+     * @return the last entry of cryptoCurrencies with coin active
+     */
+    public List<CryptoCurrency> getLastCryptoCurrencies() {
+        return coinRepository.findByActive(true)
+                .stream()
+                .map(coin -> cryptoCurrencyRepository.findAllByCoin(coin, PageRequest.of(1, 1)).stream().findFirst())
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * @return Request cryptoCurrencies with coin active
+     */
+    public List<CryptoCurrency> getLastCryptoCurrenciesByEndpoint() {
+        return coinRepository.findByActive(true)
+                .stream()
+                .map(coin -> {
+                    CryptoCurrency currency = this.getCurrency(coin);
+                    currency.setCoin(coin);
+                    return currency;
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Cryptocurrencies of active coins
+     *
+     * @param size - size of elements to return
+     * @return Map with coins and all linked cryptocurrencies with size elements in maximum
+     */
+    public BaseMapSet<Coin, CryptoCurrency> getAllCryptoCurrencies(int size) {
+        BaseMapSet<Coin, CryptoCurrency> map = new BaseMapSet<>();
+        coinRepository.findByActive(true)
+                .forEach(coin ->
+                        map.put(coin, cryptoCurrencyRepository.findAllByCoin(coin, PageRequest.of(1, size))
+                                .stream()
+                                .collect(Collectors.toList())));
+        return map;
+    }
 }

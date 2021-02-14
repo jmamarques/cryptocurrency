@@ -45,32 +45,10 @@
 </div>
 <div class="container">
     <h2 class="decorated mt-4 mb-4">
-        <span style="color: #616161;font-weight: 300;">Bitcoin</span>
+        <span style="color: #616161;font-weight: 300;">Daily Values</span>
     </h2>
-    <div class="row mx-md-n5">
-        <div class="col-12 col-lg-4 px-md-5 mb-2">
-            <div class="card shadow-sm p-3">
-                <div class="card-header bg-white" style="color: #616161;font-weight: 300;">
-                    Daily Values
-                </div>
-                <div class="card-body">
-                    <dl class="row">
-                        <dt class="col-3">Bid:</dt>
-                        <dd class="col-9">
-                            <span th:text="${T(Math).round(avg.bid * 1000) / 1000.0}"></span>
-                            <i th:class="${avg.bid >= avg.open} ? 'fas fa-arrow-up' : 'fas fa-arrow-down'"
-                               th:style="${avg.bid >= avg.open} ? 'color: green' : 'color: red'"></i>
-                        </dd>
-                        <dt class="col-3">Rate:</dt>
-                        <dd class="col-9">
-                            <span th:style="${avg.bid >= avg.open} ? 'color: green' : 'color: red'"
-                                  th:text="${T(Math).round(avg.bid * 100000.0 / avg.open) / 1000.0} + '%'"></span>
-                        </dd>
-                    </dl>
-                </div>
-            </div>
-        </div>
-    </div>
+
+    <div th:insert="~{reportIntroduction :: introduction}"></div>
 
     <h2 class="decorated mt-4 mb-4">
         <span style="color: #616161;font-weight: 300;">Recent Values</span>
